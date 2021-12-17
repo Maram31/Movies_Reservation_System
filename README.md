@@ -3,13 +3,15 @@ An online automated ticket reservation system for a cinema. The system allows th
 
 # Backend
 using Laravel php
-*  To run the server:
-=====================
+
+>To run the server:
+
 
 # Frontend
 using VueJs
-*  To run the server:
-=====================
+
+>To run the server:
+
 *    cd movies_reservation_system_frontend
 *    npm run serve
 
