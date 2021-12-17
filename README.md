@@ -6,9 +6,9 @@ using Laravel php
 ->To run the server:
 
 # Frontend
-using VueJs
-->To run the server:
-  cd movies_reservation_system_frontend
-  npm run serve
+* using VueJs
+* ->To run the server:
+    cd movies_reservation_system_frontend
+    npm run serve
 
  
