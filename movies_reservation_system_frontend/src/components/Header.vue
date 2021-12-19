@@ -5,7 +5,7 @@
       elevation="24"
       shaped
     >
-      <v-toolbar-title style="font-size: 2rem;color:#009688" >Movie Reservation System</v-toolbar-title>
+      <v-toolbar-title style="font-size: 2rem;color:white" >Movie Reservation System</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-row >
       <v-col
@@ -17,9 +17,9 @@
       <v-spacer></v-spacer>
       <v-spacer></v-spacer>
     <v-row dense >
-      <v-col><v-btn  style="font-size: 1.2rem;color:#009688" class="d-none d-lg-block" text @click="GoToHome()">
+      <v-col><v-btn  style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToHome()">
       Home</v-btn></v-col>
-      <v-col><v-btn style="font-size: 1.2rem;color:#009688" class="d-none d-lg-block" text @click="GoToAbout()">About</v-btn></v-col>
+      <v-col><v-btn style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToAbout()">About</v-btn></v-col>
       
     </v-row>
   

@@ -21,7 +21,7 @@
              <v-alert
               v-show="this.verifyalert"
               border="left"
-              color="#009688"
+              color="#4A646C"
               dark
             >
             Please Verify your account before login
@@ -31,7 +31,7 @@
              <v-alert
               v-show="this.NotRegisteredalert"
               border="left"
-              color="#009688"
+              color="#4A646C"
               dark
             >
             You're not registered, Please Register at first
@@ -41,7 +41,7 @@
              <v-alert
               v-show="this.WrongNameOrPassAlert"
               border="left"
-              color="#009688"
+              color="#4A646C"
               dark
             >
             wrong Username or password
@@ -52,7 +52,7 @@
               v-model="Name"
               label="Username"
               prepend-inner-icon="mdi-account"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required]"
               outlined
             ></v-text-field>
@@ -64,7 +64,7 @@
               :type="show1 ? 'text' : 'password'"
               label="Password"
               prepend-inner-icon="mdi-lock"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.Passlength,rules.containANumber,rules.containALetter]"
               outlined
               @click:append="show1 = !show1"
@@ -74,7 +74,7 @@
         </v-form>
         <br/>
         
-            <v-btn @click="Validate" rounded dark color="#009688" x-large style="width: 250px">
+            <v-btn @click="Validate" rounded dark color="#4A646C" x-large style="width: 250px">
               Login
             </v-btn>
           
@@ -87,7 +87,7 @@
               to='/signup'
               outlined
               rounded
-              color="#009688"
+              color="#4A646C"
               large
               style="width: 200px"
             >
@@ -102,7 +102,7 @@
               to='/'
               outlined
               rounded
-              color="#009688"
+              color="#4A646C"
               small
               style="width: 170px"
             >
@@ -190,7 +190,7 @@ export default {
 <style scoped>
 
 #content {
-  background-color: #008080;
+  background-color: #4A646C;
   
 }
 
@@ -201,7 +201,7 @@ export default {
  
 }
 #login {
-  color: #009688;
+  color: #4A646C;
 }
 
 </style>>

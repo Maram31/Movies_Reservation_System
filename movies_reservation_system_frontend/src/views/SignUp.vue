@@ -16,7 +16,7 @@
              <v-alert
               v-show="this.ExistingUseralert"
               border="left"
-              color="#009688"
+              color="#4A646C"
               dark
             >
             This Email/Username is already taken try to login with them
@@ -27,7 +27,7 @@
               v-model="Name"
               label="Username"
               prepend-inner-icon="mdi-account"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.Namelength]"
               outlined
             ></v-text-field>
@@ -37,7 +37,7 @@
               v-model="FirstName"
               label="First Name"
               prepend-inner-icon="mdi-account"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.Namelength]"
               outlined
             ></v-text-field>
@@ -46,7 +46,7 @@
               v-model="LastName"
               label="Last Name"
               prepend-inner-icon="mdi-account"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.Namelength]"
               outlined
             ></v-text-field>
@@ -56,7 +56,7 @@
               v-model="Email"
               label="Email"
               prepend-inner-icon="mdi-email"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.email]"
               outlined
             ></v-text-field>
@@ -69,7 +69,7 @@
               :type="show1 ? 'text' : 'password'"
               label="Password"
               prepend-inner-icon="mdi-lock"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.Passlength,rules.containANumber,rules.containALetter]"
               outlined
               @click:append="show1 = !show1"
@@ -81,7 +81,7 @@
               :type="show2 ? 'text' : 'password'"
               label="Confirm Password"
               prepend-inner-icon="mdi-lock"
-              color="#009688"
+              color="#4A646C"
               :rules="[rules.required, rules.Matchingchar(Confirmpassword, password),rules.containANumber,rules.containALetter]"
               outlined
               @click:append="show2 = !show2"
@@ -106,12 +106,12 @@
                 
                 label="Customer"
                 value="Customer"
-                color="#009688"
+                color="#4A646C"
               ></v-radio>
               <v-radio
                 label="Manager"
                 value="Manager"
-                color="#009688"
+                color="#4A646C"
               ></v-radio>
               
             </v-radio-group>
@@ -123,7 +123,7 @@
               @click="Validate"
               rounded
               dark
-              color="#009688"
+              color="#4A646C"
               x-large
               style="width: 250px">
               Register
@@ -138,7 +138,7 @@
               to='/login'
               outlined
               rounded
-              color="#009688"
+              color="#4A646C"
               large
               style="width: 200px"
             >
@@ -171,7 +171,6 @@ export default {
       Email: '',
       password: '',
       Confirmpassword: '',
-      color: '009688',
       rules: {
         required: (value) => !!value || 'Required.',
         email: (value) => {
@@ -230,7 +229,7 @@ export default {
 
 <style scoped>
 #content {
-  background-color: #008080;
+  background-color: #4A646C;
 }
 #container {
   background-color: #eeeeee;
@@ -238,7 +237,7 @@ export default {
   width: 50%;
 }
 #signup {
-  color: #009688;
+  color: #4A646C;
 }
 
 

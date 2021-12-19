@@ -4,7 +4,7 @@
     <v-col
       class="text-center teal--text"
       cols="12"
-      style="color:#009688"
+      style="color:white"
       
     >
       {{ new Date().getFullYear() }} — <strong >Movie Reservation System</strong>
