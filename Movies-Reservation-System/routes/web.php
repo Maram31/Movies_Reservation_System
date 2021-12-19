@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MoviesController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RoomsController;
+use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\ReservationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +18,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('/movies', MoviesController::class);
+
+Route::resource('/users', UsersController::class);
+
+Route::resource('/Rooms', RoomsController::class);
+
+Route::resource('/cinema', CinemaController::class);
+
+Route::resource('/reservation', ReservationsController::class);
