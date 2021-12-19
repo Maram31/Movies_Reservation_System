@@ -1,6 +1,7 @@
 <template>
     <v-main id="content">
       <Header/>
+      <br />
       <v-container id="container" class="mt-10 mb-10">
         <v-row justify="center" class="mb-5">
           <v-col
@@ -146,7 +147,9 @@
             </v-btn>
           
       </v-container>
+      <br />
     <Footer/>
+    
     </v-main>
 </template>
 

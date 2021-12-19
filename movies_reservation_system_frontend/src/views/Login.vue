@@ -1,6 +1,7 @@
 <template>
 <v-main id="content">
   <Header/>
+  <br />
     <v-container id="container" class="mt-10 mb-10">
         <br/>
         <v-row justify="center" class="mb-5">
@@ -109,6 +110,7 @@
             Continue as a Guest
             </v-btn>
       </v-container>
+      <br />
       <Footer/>
     </v-main>
 </template>
