@@ -1,11 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MoviesController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\RoomsController;
-use App\Http\Controllers\CinemaController;
-use App\Http\Controllers\ReservationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,16 +12,14 @@ use App\Http\Controllers\ReservationsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function() {
+require __DIR__.'/auth.php';
+
+Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('/movies', MoviesController::class);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::resource('/users', UsersController::class);
 
-Route::resource('/Rooms', RoomsController::class);
-
-Route::resource('/cinema', CinemaController::class);
-
-Route::resource('/reservation', ReservationsController::class);
