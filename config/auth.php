@@ -5,7 +5,7 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
-    |--------------------------------------------------------------------------
+    |-----------------------------------------------------------------/////////////////////////////////////////////////////////////////---------
     |
     | This option controls the default authentication "guard" and password
     | reset options for your application. You may change these defaults
@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        
+        //user api
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',]
     ],
 
     /*
@@ -64,11 +69,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
