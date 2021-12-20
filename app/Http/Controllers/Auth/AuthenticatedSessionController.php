@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
             $credentials = $request->only('username', 'password');
             $token = Auth::attempt($credentials, true);
             if ($token){
-                return response()->json(['message' => 'logged in successfully','AccessToken:'=>$token], 200);
+                return response()->json(['message' => 'logged in successfully','role'=>$request->user()->role,'AccessToken:'=>$token], 200);
             }
             else{
                 return response()->json(['message' => 'No such user, invalid email or password'], 400);
@@ -56,7 +56,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-     if (   auth::logout()  )
+     auth::logout() ;
         return response()->json(['message' => 'logged out successfully'], 200);
      
     }

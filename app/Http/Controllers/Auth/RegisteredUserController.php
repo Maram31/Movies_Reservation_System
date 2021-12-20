@@ -56,7 +56,7 @@ class RegisteredUserController extends Controller
 
             $credentials = $request->only('username', 'password');
             $token = auth::attempt($credentials);
-            return response()->json(['message' => 'Successfully created your account !','user'=>$user,'AccessToken:'=>$token], 201);
+            return response()->json(['message' => 'Successfully created your account !','user'=>$user->role,'AccessToken:'=>$token], 201);
         }
     }
 }
