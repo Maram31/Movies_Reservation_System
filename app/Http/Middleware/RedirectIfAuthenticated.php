@@ -23,7 +23,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return response()->json(['message' => 'You are a guest']);
+                return redirect(RouteServiceProvider::HOME);
             }
         }
 

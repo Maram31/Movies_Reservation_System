@@ -56,7 +56,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-       auth::logout() ;
+     if (   auth::logout()  )
         return response()->json(['message' => 'logged out successfully'], 200);
      
     }
