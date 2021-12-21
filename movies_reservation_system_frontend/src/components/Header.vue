@@ -5,6 +5,7 @@
       elevation="24"
       shaped
     >
+      
       <v-toolbar-title style="font-size: 2rem;color:white" >Movie Reservation System</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-row >
@@ -19,10 +20,11 @@
     <v-row dense >
       <v-col><v-btn  style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToHome()">
       Home</v-btn></v-col>
-      <v-col><v-btn style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToAbout()">About</v-btn></v-col>
+      <v-col><v-btn v-if="!authorized" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToSignIn()">login</v-btn><v-btn v-if="authorized" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToSignIn()">logout</v-btn></v-col>
       
     </v-row>
-  
+    
+    
     </v-app-bar>
     
   </nav>
@@ -32,22 +34,27 @@
 
 export default {
   name: 'Header',
-  data: () => ({
-    
-  }),
+  data (){ return{
+  authorized: false, //if user.token!=null to be edit laters
+  
+  }},
   
   rules: {
     required: (value) => !!value || 'Required.',
   },
   methods: {
-    GoToAbout() {
-      this.$router.push('/about');
+    GoToSignUp() {
+      this.$router.push('/signup');
     },
     GoToHome() {
       this.$router.push('/');
     },
+    GoToSignIn(){
+      this.$router.push('/login');
+    },
     
     
   },
+  
 };
 </script>

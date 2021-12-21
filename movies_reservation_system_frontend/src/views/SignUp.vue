@@ -1,5 +1,5 @@
 <template>
-    <v-main id="content">
+    <v-app id="content">
       <Header/>
       <br />
       <br />
@@ -152,7 +152,7 @@
       <br />
     <Footer/>
     
-    </v-main>
+    </v-app>
 </template>
 
 <script>

@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 import SignUp from '../views/SignUp.vue'
 import Login from '../views/Login.vue'
 import Home from '../views/Home.vue'
+import Room from '../views/Room.vue'
+import CreateNewMovie from '../views/CreateNewMovie.vue'
+import EditMovie from '../views/EditMovie.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,6 +24,22 @@ const routes = [
     name: 'Home',
     component: Home
   },
+  {
+    path: '/room',
+    name: 'Room',
+    component: Room
+  },
+  {
+    path: '/create_new_movie',
+    name: 'CreateNewMovie',
+    component: CreateNewMovie
+  },
+  {
+    path: '/edit_movie',
+    name: 'EditMovie',
+    component: EditMovie
+  },
+  
   {
     path: '/about',
     name: 'About',
