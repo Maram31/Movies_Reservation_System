@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 
+
+
 // guest routes do not need any authentication
 Route::group(['middleware' => 'guest'], function(){
 
@@ -36,11 +38,14 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
  //manager routes
  Route::group(['middleware' => 'auth-manager'], function(){
-
+    Route::post('manager/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->name('logout');
 
  });
 
  // admin routes
 Route::group(['middleware' => 'auth-admin'], function(){
+    Route::post('admin/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->name('logout');
 
  });
