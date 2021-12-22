@@ -40,7 +40,7 @@
 
     <v-card-actions >
       <v-btn
-        color="#4A646C"
+        color="#319177"
         small
 
         :disabled="!seat.reserved"

@@ -57,7 +57,7 @@
       <v-btn
         v-if="manager"
         style="margin:0 0 0 5px"
-        color="#4A646C"
+        color="#319177"
 
         dark
         @click="Edit(movie.id)"
