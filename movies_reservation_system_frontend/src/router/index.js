@@ -6,6 +6,9 @@ import Home from '../views/Home.vue'
 import Room from '../views/Room.vue'
 import CreateNewMovie from '../views/CreateNewMovie.vue'
 import EditMovie from '../views/EditMovie.vue'
+import MyReservations from '../views/MyReservations.vue'
+import Users from '../views/Users.vue'
+import ManagersRequests from '../views/ManagersRequests.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -30,6 +33,12 @@ const routes = [
     component: Room
   },
   {
+    path: '/my_reservations',
+    name: 'MyReservations',
+    component: MyReservations
+  },
+  //for managers only
+  {
     path: '/create_new_movie',
     name: 'CreateNewMovie',
     component: CreateNewMovie
@@ -39,7 +48,17 @@ const routes = [
     name: 'EditMovie',
     component: EditMovie
   },
-  
+  //for site Admins only
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users
+  },
+  {
+    path: '/managers_requests',
+    name: 'ManagersRequests',
+    component: ManagersRequests
+  },
   {
     path: '/about',
     name: 'About',
