@@ -7,6 +7,7 @@
   <h1>Pick your seat(s)</h1>
   <br/><br/>
     <v-row>
+     
     <v-card
     
     width="100%"
@@ -51,11 +52,14 @@
       {{label[seat.i][seat.j]}}
       </v-btn>
       
+      
     </v-card-actions>
+    
   </v-card>
   </v-row>
-    <div>
+    <div >
      <v-btn
+        
         color="#4A646C"
         x-large
         dark
@@ -67,7 +71,43 @@
       </v-btn>
       
       </div>
+      <v-dialog
+      v-model="dialog"
+      max-width="400"
+      
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Want to login?
+        </v-card-title>
+
+        <v-card-text>
+          If you want to reserve a seat you have to login at first
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="#319177"
+            
+            @click="GoToSignIn()"
+          >
+            Login
+          </v-btn>
+
+          <v-btn
+            color="#4A646C"
+            
+            @click="dialog = false"
+          >
+            Stay in the same page
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <br/><br/><br/><br/><br/>
+
     <Footer/>
     </v-app>
 </template>
@@ -83,6 +123,8 @@ export default {
   
   data () {
     return{
+    dialog:false,  
+    customer:false,  
     label:[[],[],[],[],[],[]],
     roomSize:6,
   seats:
@@ -135,14 +177,25 @@ export default {
         console.log(this.roomId)
     },
     select(i,j){
+        if(localStorage.getItem('usertoken') == null){
+          this.dialog=true;
+        }
+        else{
+        if(localStorage.getItem('userRole') == 'Customer'){
+
+        
         //on select if it is a guest they should be asked 
         //if they want to be directed to SignIn if they want to reserve a seat or stay in the same page
-        this.label[i][j]="selected"
-        console.log(i,j)
-        console.log(this.label)
+        this.label[i][j]="selected";
+        console.log(i,j);
+        console.log(this.label);
         //add selected seat i,j in the selected array
+        }}
     },
-    
+    GoToSignIn(){
+      this.dialog=false;
+      this.$router.push('/login');
+    },
     
   },
   created(){
@@ -151,6 +204,9 @@ export default {
          this.label[i][j]="select"
      } 
      } 
+     if(localStorage.getItem('userRole') == 'Customer'){
+          this.customer=true;
+      }
   },
   watch: {
       label(){

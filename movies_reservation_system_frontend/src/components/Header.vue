@@ -20,11 +20,12 @@
     <v-row dense >
       <v-col><v-btn  style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToHome()">
       Home</v-btn></v-col>
-      <v-col><v-btn v-if="!siteAdmin" :disabled="authorized" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToMyReservations()">
+      <v-col v-if="customer || siteAdmin"><v-btn v-if="customer" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToMyReservations()">
       My Reservations</v-btn><v-btn v-if="siteAdmin" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToManagersRequests()">
       Managers Requests</v-btn></v-col>
-      <v-col><v-btn v-if="!authorized && !siteAdmin" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToSignIn()">login</v-btn><v-btn v-if="authorized" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToSignIn()">logout</v-btn><v-btn v-if="siteAdmin" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToUsers()">
+      <v-col v-if="siteAdmin"><v-btn v-if="siteAdmin" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToUsers()">
       Users</v-btn></v-col>
+      <v-col><v-btn v-if="!authorized" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="GoToSignIn()">login</v-btn><v-btn v-if="authorized" style="font-size: 1.2rem;color:white" class="d-none d-lg-block" text @click="Logout()">logout</v-btn></v-col>
       
     </v-row>
     
@@ -35,12 +36,14 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 export default {
   name: 'Header',
   data (){ return{
-  authorized: false, //if user.token!=null to be edit laters
-  siteAdmin: true,
+  authorized: false, 
+  siteAdmin: false,
+  manager:false,
+  customer:false,
   
   }},
   
@@ -55,6 +58,16 @@ export default {
     GoToSignIn(){
       this.$router.push('/login');
     },
+    Logout(){
+      axios.post('http://127.0.0.1:8000/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+      localStorage.clear();
+      this.authorized= false;
+      this.customer=false;
+      this.siteAdmin= false;
+      this.manager=false;
+      this.$router.push('/login');
+
+    },
     GoToMyReservations(){
       this.$router.push('/my_reservations');
     },
@@ -66,6 +79,34 @@ export default {
     }
     
   },
-  
+  created(){
+    if (localStorage.getItem('usertoken') != null){
+      this.authorized=true;
+      if(localStorage.getItem('userRole') == 'Customer'){
+        this.customer=true;
+        this.siteAdmin= false;
+        this.manager=false;
+      }
+      else if(localStorage.getItem('userRole') == 'Manager'){
+        this.customer=false;
+        this.siteAdmin= false;
+        this.manager=true;
+      }
+      else if(localStorage.getItem('userRole') == 'SiteAdministrator'){
+        this.customer=false;
+        this.siteAdmin= true;
+        this.manager=false;
+      }
+      else{
+        this.customer=false;
+        this.siteAdmin= false;
+        this.manager=false;
+      
+      }
+    }
+    else{
+      this.authorized=false;
+    }
+  }
 };
 </script>

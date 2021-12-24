@@ -18,10 +18,11 @@
              <v-alert
               v-show="this.ExistingUseralert"
               border="left"
-              color="#4A646C"
+              color="#9C2542"
               dark
+              type="error"
             >
-            This Email/Username is already taken try to login with them
+            This Email/Username is already taken. Try to login.
             </v-alert>
         
        
@@ -156,7 +157,7 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -188,14 +189,16 @@ export default {
         containALetter:(value)=>{
           const regExp = /[a-zA-Z]/g;
           if (!regExp.test(value)){
-            return 'Invalid password: Should contain atleast 1 letter'
+            return 'Invalid password: Should contain atleast 1 letter';
           }
+          return true;
         },
         containANumber:(value)=>{
           const regExp = /[0-9]/;
           if (!regExp.test(value)){
-            return 'Invalid password: Should contain atleast 1 digit'
+            return 'Invalid password: Should contain atleast 1 digit';
           }
+          return true;
         },
 
       },
@@ -208,22 +211,29 @@ export default {
     },
     Validate() {
       if (this.$refs.form.validate()) {
-        /*const fd = new FormData();
-        fd.append('name', this.Name);
-        fd.append('first_name', this.FirstName);
-        fd.append('last_name', this.LastName);
-        fd.append('email', this.Email);
-        fd.append('password', this.password);
-        fd.append('password_confirmation', this.Confirmpassword);
-        fd.append('role', this.Role);
-        const option = { headers: { APP_KEY: 'c2Nob29sX2ZpbmRlcl9hcHBfa2V5ZmJkamhqeGNoa2N2anhqY2p2Ymh4amM6dmFzZGhoYXNkaGphZHNrZHNmYW1jbmhkc3VoZHVoY3Nq', 'Content-Type': 'multipart/form-data' } };
-        axios.post('http://127.0.0.1:8000/api/register', fd, option)
-          .then(() => {
+        axios({
+          method: "post",
+          url: "http://localhost:8000/register",
+
+          data: {
+            username: this.Name,
+            first_name: this.FirstName,
+            last_name: this.LastName,
+            email:this.Email,
+            password: this.password,
+            password_confirmation: this.Confirmpassword,
+            role: this.Role,
+          },
+        })
+          .then((response) => {
+            this.ExistingUseralert = false;
+            localStorage.setItem('usertoken', response.data.AccessToken);
+            localStorage.setItem('userRole', response.data.user);
             this.$router.push('/');
           })
           .catch(() => {
             this.ExistingUseralert = true;
-          });*/
+          });
       }
     },
    

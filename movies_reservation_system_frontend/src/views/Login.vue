@@ -21,20 +21,11 @@
         
         
              <v-alert
-              v-show="this.verifyalert"
-              border="left"
-              color="#4A646C"
-              dark
-            >
-            Please Verify your account before login
-            </v-alert>
-          
-        
-             <v-alert
               v-show="this.NotRegisteredalert"
               border="left"
-              color="#4A646C"
+              color="#9C2542"
               dark
+              type="error"
             >
             You're not registered, Please Register at first
             </v-alert>
@@ -43,10 +34,11 @@
              <v-alert
               v-show="this.WrongNameOrPassAlert"
               border="left"
-              color="#4A646C"
+              color="#9C2542"
               dark
+              type="error"
             >
-            wrong Username or password
+            {{errorMessage}}
             </v-alert>
           
 
@@ -118,7 +110,7 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -131,9 +123,9 @@ export default {
       show1: false,
       Name: '',
       password: '',
-      verifyalert: false,
       NotRegisteredalert: false,
       WrongNameOrPassAlert: false,
+      errorMessage:'',
       rules: {
         required: (value) => !!value || 'Required.',
         Passlength: (value) => (value.length >= 8) || 'Min 8 characters',
@@ -143,12 +135,14 @@ export default {
           if (!regExp.test(value)){
             return 'Invalid password: Should contain atleast 1 letter'
           }
+          return true
         },
         containANumber:(value)=>{
           const regExp = /[0-9]/;
           if (!regExp.test(value)){
             return 'Invalid password: Should contain atleast 1 digit'
           }
+          return true
         },
       },
     };
@@ -156,39 +150,34 @@ export default {
   methods: {
     Validate() {
       if (this.$refs.form.validate()) {
-        /*axios.post('http://127.0.0.1:8000/api/login', { name: this.Name, password: this.password }, { headers: { APP_KEY: 'c2Nob29sX2ZpbmRlcl9hcHBfa2V5ZmJkamhqeGNoa2N2anhqY2p2Ymh4amM6dmFzZGhoYXNkaGphZHNrZHNmYW1jbmhkc3VoZHVoY3Nq' } })
+        axios.post('http://127.0.0.1:8000/login', { username: this.Name, password: this.password })
           .then((response) => {
-            this.verifyalert = false;
             this.NotRegisteredalert = false;
             this.WrongNameOrPassAlert = false;
-            this.$store.state.usertoken = response.data.access_token;
-            localStorage.setItem('usertoken', response.data.access_token);
+            localStorage.setItem('usertoken', response.data.AccessToken);
+            localStorage.setItem('userRole', response.data.role);
             this.$router.push('/');
           })
           .catch((error) => {
             if (error.response) {
-              if (error.response.status === 401) {
-                this.verifyalert = true;
-                this.NotRegisteredalert = false;
-                this.WrongNameOrPassAlert = false;
-              } else if (error.response.status === 402) {
-                this.verifyalert = false;
+              if (error.response.status === 400) {
                 this.NotRegisteredalert = false;
                 this.WrongNameOrPassAlert = true;
+                console.log(error.response.data.ErrorsIn)
+                this.errorMessage=error.response.data.ErrorsIn;
               } else {
-                this.verifyalert = false;
                 this.NotRegisteredalert = true;
                 this.WrongNameOrPassAlert = false;
               }
             }
-          });*/
+          });
       }
     },
     
   },
-  /*created() {
-    if (localStorage.getItem('usertoken') !== null) this.$router.push('/home');
-  },*/
+  created() {
+    if (localStorage.getItem('usertoken') != null) this.$router.push('/');
+  },
 };
 </script>
 <style scoped>

@@ -31,7 +31,6 @@
 
     <v-card-text>
       <v-chip-group
-        v-model="selection"
         active-class="black accent-4 white--text"
         column
         
@@ -101,7 +100,7 @@ export default {
   },
   data() {
     return{
-    
+    loading:false,
     movies:
       {
       movie1:{
@@ -152,7 +151,7 @@ export default {
       
     
     },
-    manager:true,
+    manager:false,
     
   }
   
