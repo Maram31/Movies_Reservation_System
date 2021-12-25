@@ -1,8 +1,18 @@
 <template>
   <v-app >
     <Header/>
-    
+    <br/>
+    <v-alert
+              v-show="this.NoMovies"
+              border="left"
+              color="#319177"
+              dark
+              type="info"
+            >
+            No movies available
+    </v-alert> 
     <v-row>
+     
     <v-card
     :loading="loading"
     v-for="(movie, index) in movies"
@@ -108,15 +118,16 @@ export default {
   data() {
     return{
     loading:false,
-    movies:{},
-    manager:true,
+    movies:[],
+    manager:false,
+    NoMovies:false,
     
   }
   
 },
 methods:{
     reserve(i){
-      //console.log(i)
+      
       this.$router.push({
         name: "Room",
         params: { id: i },
@@ -138,6 +149,9 @@ methods:{
     axios.get("http://127.0.0.1:8000/getAllMovies", {})
     .then(response => {
       this.movies=response.data;
+      if (this.movies.length==0){
+        this.NoMovies=true;
+      }
 
     }).catch((error) => {
       console.log(error)
@@ -145,6 +159,8 @@ methods:{
     if(localStorage.getItem('userRole') == 'Manager'){
       this.manager=true;
     }
+    console.log()
+    
   }
 }
 </script>

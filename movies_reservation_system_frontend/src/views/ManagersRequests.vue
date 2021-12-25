@@ -1,7 +1,34 @@
 <template>
   <v-app id="home">
     <Header/>
-    
+    <br/>
+    <v-alert
+              v-show="this.NoRequests"
+              border="left"
+              color="#319177"
+              dark
+              type="info"
+            >
+            No requests available
+    </v-alert> 
+    <v-alert
+              v-show="this.success"
+              border="left"
+              color="#319177"
+              dark
+              type="success"
+            >
+            {{successMsg}}
+            </v-alert>
+        <v-alert
+              v-show="this.fail"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            {{errorMsg}}
+            </v-alert> 
     <v-row>
     <v-card
     :loading="loading"
@@ -23,10 +50,10 @@
 
     <v-divider class="mx-4"></v-divider>
 
-    <p style="font-size:1rem">Manager Username: {{request.title}}</p>
-    <p style="font-size:1rem">Manager Firstname: {{request.title}}</p>
-    <p style="font-size:1rem">Manager Lastname: {{request.title}}</p>
-    <p style="font-size:1rem">Manager Email: {{request.date}}</p>
+    <p style="font-size:1rem">Manager Username: {{request.username}}</p>
+    <p style="font-size:1rem">Manager Firstname: {{request.first_name}}</p>
+    <p style="font-size:1rem">Manager Lastname: {{request.last_name}}</p>
+    <p style="font-size:1rem">Manager Email: {{request.email}}</p>
 
 
     <v-card-actions >
@@ -63,7 +90,7 @@
 
 <script>
 
-
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -73,70 +100,64 @@ export default {
   },
   data() {
     return{
-    
-    requests:
-      {
-      movie1:{
-        id:1,
-        title:"Spiderman",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie2:{
-        id:2,
-        title:"Free guy",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie3:{
-        id:3,
-        title:"Elbadla",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie4:{
-        id:4,
-        title:"Final Destination",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie5:{
-        id:5,
-        title:"Silence",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      
-    
-    },
-    
+    success:false,
+    fail:false,
+    errorMsg:'',
+    successMsg:'',
+    requests:[],
+    NoRequests:false,
     
   }
   
 },
 methods:{
     CancelRequest(id){
-      console.log(id)
+
+      axios.patch(`http://127.0.0.1:8000/user/${id}`,{approved:0} ,{ headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+      .then(() => {
+        this.requests = this.requests.filter(function(request) {
+        return request.id != id})
+        this.success=true;
+        this.fail=false;
+        this.successMsg="Request is declined successfully";
+      }).catch((error) => {
+        this.success=false;
+        this.fail=true;
+        this.errorMsg=error.response.data.message;
+        console.log(error)
+      });
     },
     AcceptRequest(id){
-      console.log(id)
-    }
+      axios.patch(`http://127.0.0.1:8000/user/${id}`,{approved:1}, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+      .then(() => {
+        this.requests = this.requests.filter(function(request) {
+        return request.id != id})
+        this.success=true;
+        this.fail=false;
+        this.successMsg="Request is accepted successfully";
+      }).catch((error) => {
+        this.success=false;
+        this.fail=true;
+        this.errorMsg=error.response.data.message;
+        console.log(error)
+      });
+
+    },
   },
+  created(){
+  if (localStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/requests`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    .then(response => {
+      console.log(response.data);
+      this.requests=response.data;
+      if (this.requests.length==0){
+        this.NoRequests=true;
+      }
+    }).catch((error) => {
+      console.log(error)
+    });
+  
+  }
 }
 </script>
 <style scoped>

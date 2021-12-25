@@ -40,9 +40,9 @@ import axios from 'axios';
 export default {
   name: 'Header',
   data (){ return{
-  authorized: true, 
+  authorized: false, 
   siteAdmin: false,
-  manager:true,
+  manager:false,
   customer:false,
   
   }},
@@ -69,9 +69,7 @@ export default {
       else if(this.siteAdmin==true){
         axios.post('http://127.0.0.1:8000/admin/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
       }
-      else {
-        return
-      }
+      
       localStorage.clear();
       this.authorized= false;
       this.customer=false;
@@ -92,7 +90,7 @@ export default {
     
   },
   created(){
-    /*if (localStorage.getItem('usertoken') != null){
+    if (localStorage.getItem('usertoken') != null){
       this.authorized=true;
       if(localStorage.getItem('userRole') == 'Customer'){
         this.customer=true;
@@ -118,7 +116,7 @@ export default {
     }
     else{
       this.authorized=false;
-    }*/
+    }
   }
 };
 </script>

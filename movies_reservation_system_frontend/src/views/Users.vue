@@ -1,7 +1,25 @@
 <template>
   <v-app id="home">
     <Header/>
-    
+    <br/>
+    <v-alert
+              v-show="this.success"
+              border="left"
+              color="#319177"
+              dark
+              type="success"
+            >
+            User is deleted successfully
+            </v-alert>
+        <v-alert
+              v-show="this.fail"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            {{errorMsg}}
+            </v-alert> 
     <v-row>
     <v-card
     :loading="loading"
@@ -9,7 +27,7 @@
     :key="index"
     
     width="80%"
-    height="240"
+    height="280"
     elevation="24"
     outlined
     shaped
@@ -18,15 +36,15 @@
 
     
 
-    <v-card-title style="color:#4A646C">{{user.title}}</v-card-title>
+    <v-card-title style="color:#4A646C">{{user.username}}</v-card-title>
 
 
     <v-divider class="mx-4"></v-divider>
-
-    <p style="font-size:1rem">User Firstname: {{user.title}}</p>
-    <p style="font-size:1rem">User Lastname: {{user.title}}</p>
-    <p style="font-size:1rem">User Email: {{user.date}}</p>
-
+    
+    <p style="font-size:1rem">User Firstname: {{user.first_name}}</p>
+    <p style="font-size:1rem">User Lastname: {{user.last_name}}</p>
+    <p style="font-size:1rem">User Email: {{user.email}}</p>
+    <p style="font-size:1rem">User Role: {{user.role}}</p>
 
     <v-card-actions >
       
@@ -54,7 +72,7 @@
 
 <script>
 
-
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -64,57 +82,10 @@ export default {
   },
   data() {
     return{
-    
-    users:
-      {
-      movie1:{
-        id:1,
-        title:"Spiderman",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie2:{
-        id:2,
-        title:"Free guy",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie3:{
-        id:3,
-        title:"Elbadla",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie4:{
-        id:4,
-        title:"Final Destination",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie5:{
-        id:5,
-        title:"Silence",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      
-    
-    },
+    success:false,
+    fail:false,
+    errorMsg:'',
+    users:[],
     
     
   }
@@ -122,10 +93,32 @@ export default {
 },
 methods:{
     removeUser(id){
-      console.log(id)
+      axios.delete(`http://127.0.0.1:8000/deleteUser/${id}`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    .then(() => {
+      this.success=true;
+      this.fail=false;
+      this.users = this.users.filter(function(user) {
+        return user.id != id
+      })
+      
+    }).catch((error) => {
+      console.log(error.message)
+      this.errorMsg=error.response.data.message;
+      this.success=false;
+      this.fail=true;
+    });
     },
     
   },
+  created(){
+    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/users`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    .then(response => {
+      this.users=response.data;
+    }).catch((error) => {
+      console.log(error)
+    });
+    }
 }
 </script>
 <style scoped>
