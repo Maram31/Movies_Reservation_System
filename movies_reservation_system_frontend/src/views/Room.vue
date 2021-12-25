@@ -59,7 +59,7 @@
   </v-row>
     <div >
      <v-btn
-        
+        :disabled="this.manager || this.siteAdmin"
         color="#4A646C"
         x-large
         dark
@@ -124,7 +124,9 @@ export default {
   data () {
     return{
     dialog:false,  
-    customer:false,  
+    customer:false,
+    manager:false,
+    siteAdmin:false, 
     label:[[],[],[],[],[],[]],
     roomSize:6,
   seats:
@@ -173,8 +175,9 @@ export default {
   
   methods: {
     reserve(){
-        
-        console.log(this.roomId)
+        if(localStorage.getItem('usertoken') != null){
+        //reserve
+        }
     },
     select(i,j){
         if(localStorage.getItem('usertoken') == null){
@@ -199,14 +202,32 @@ export default {
     
   },
   created(){
-     for(var i=0;i<=this.roomSize;i++){
-        for(var j=0;j<=5;j++){
-         this.label[i][j]="select"
-     } 
-     } 
+     
      if(localStorage.getItem('userRole') == 'Customer'){
-          this.customer=true;
+        this.customer=true;
+        this.siteAdmin= false;
+        this.manager=false;
       }
+      else if(localStorage.getItem('userRole') == 'Manager'){
+        this.customer=false;
+        this.siteAdmin= false;
+        this.manager=true;
+      }
+      else if(localStorage.getItem('userRole') == 'Admin'){
+        this.customer=false;
+        this.siteAdmin= true;
+        this.manager=false;
+      }
+      else{
+        this.customer=false;
+        this.siteAdmin= false;
+        this.manager=false;
+      }
+      for(let i=0;i<=this.roomSize;i++){
+        for(let j=0;j<=5;j++){
+         this.label[i][j]="select"
+        } 
+      } 
   },
   watch: {
       label(){

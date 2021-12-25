@@ -18,7 +18,24 @@
         
         
         <v-form ref="form">
-        
+        <v-alert
+              v-show="this.success"
+              border="left"
+              color="#319177"
+              dark
+              type="success"
+            >
+            Movie is added successfully
+            </v-alert>
+        <v-alert
+              v-show="this.fail"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            {{errorMsg}}
+            </v-alert>    
         
 
         <v-text-field
@@ -52,15 +69,16 @@
               type="time"
               :rules="[rules.required]"
             ></v-text-field>
-    <v-text-field
+    <v-file-input
               v-model="posterImage"
+              prepend-icon="mdi-camera-plus"
               label="Poster Image"
               color="#4A646C"
               outlined
-              type="file"
+              chips
               accept="image/*"
               :rules="[rules.required]"
-            ></v-text-field>
+            ></v-file-input>
       <v-select
               v-model="room"
               :items="items"
@@ -86,7 +104,7 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -96,6 +114,16 @@ export default {
   },
   data() {
     return {
+      title:'',
+      date:'',
+      startTime:'',
+      endTime:'',
+      posterImage:'',
+      room:'',
+      screen:'',
+      success:false,
+      fail:false,
+      errorMsg:'',
       items: ['Room 1 - size 20', 'Room 2 - size 30'],
       rules: {
         required: (value) => !!value || 'Required.',
@@ -105,40 +133,41 @@ export default {
   },
   methods: {
     createNewMovie() {
+      this.success=false;
+      this.fail=false;
       if (this.$refs.form.validate()) {
-        /*axios.post('http://127.0.0.1:8000/api/login', { name: this.Name, password: this.password }, { headers: { APP_KEY: 'c2Nob29sX2ZpbmRlcl9hcHBfa2V5ZmJkamhqeGNoa2N2anhqY2p2Ymh4amM6dmFzZGhoYXNkaGphZHNrZHNmYW1jbmhkc3VoZHVoY3Nq' } })
-          .then((response) => {
-            this.verifyalert = false;
-            this.NotRegisteredalert = false;
-            this.WrongNameOrPassAlert = false;
-            this.$store.state.usertoken = response.data.access_token;
-            localStorage.setItem('usertoken', response.data.access_token);
-            this.$router.push('/');
+        if(this.room=='Room 1 - size 20'){
+          this.screen=1
+        }
+        else{
+          this.screen=2
+        }
+        const fd = new FormData();
+        fd.append('poster', this.posterImage);
+        fd.append('date', this.date);
+        fd.append('start_time', this.startTime);
+        fd.append('end_time', this.endTime);
+        console.log(this.posterImage)
+        fd.append('screen',  this.screen);
+        fd.append('title', this.title);
+        const option = { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
+        axios.post('http://127.0.0.1:8000/createmovie', fd, option)
+          .then(() => {
+            this.success=true;
           })
           .catch((error) => {
-            if (error.response) {
-              if (error.response.status === 401) {
-                this.verifyalert = true;
-                this.NotRegisteredalert = false;
-                this.WrongNameOrPassAlert = false;
-              } else if (error.response.status === 402) {
-                this.verifyalert = false;
-                this.NotRegisteredalert = false;
-                this.WrongNameOrPassAlert = true;
-              } else {
-                this.verifyalert = false;
-                this.NotRegisteredalert = true;
-                this.WrongNameOrPassAlert = false;
-              }
-            }
-          });*/
+            this.fail=true;
+            this.errorMsg=error.response.data.ErrorsIn;
+            console.log(error.response.data.ErrorsIn)
+          });
+        
       }
     },
     
   },
-  /*created() {
-    if (localStorage.getItem('usertoken') !== null) this.$router.push('/home');
-  },*/
+  created() {
+    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
+  },
 };
 </script>
 <style scoped>

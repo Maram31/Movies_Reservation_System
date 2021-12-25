@@ -40,9 +40,9 @@ import axios from 'axios';
 export default {
   name: 'Header',
   data (){ return{
-  authorized: false, 
+  authorized: true, 
   siteAdmin: false,
-  manager:false,
+  manager:true,
   customer:false,
   
   }},
@@ -59,7 +59,19 @@ export default {
       this.$router.push('/login');
     },
     Logout(){
-      axios.post('http://127.0.0.1:8000/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+      
+      if(this.customer==true){
+        axios.post('http://127.0.0.1:8000/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+      }
+      else if(this.manager==true){
+        axios.post('http://127.0.0.1:8000/manager/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+      }  
+      else if(this.siteAdmin==true){
+        axios.post('http://127.0.0.1:8000/admin/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+      }
+      else {
+        return
+      }
       localStorage.clear();
       this.authorized= false;
       this.customer=false;
@@ -80,7 +92,7 @@ export default {
     
   },
   created(){
-    if (localStorage.getItem('usertoken') != null){
+    /*if (localStorage.getItem('usertoken') != null){
       this.authorized=true;
       if(localStorage.getItem('userRole') == 'Customer'){
         this.customer=true;
@@ -92,7 +104,7 @@ export default {
         this.siteAdmin= false;
         this.manager=true;
       }
-      else if(localStorage.getItem('userRole') == 'SiteAdministrator'){
+      else if(localStorage.getItem('userRole') == 'Admin'){
         this.customer=false;
         this.siteAdmin= true;
         this.manager=false;
@@ -106,7 +118,7 @@ export default {
     }
     else{
       this.authorized=false;
-    }
+    }*/
   }
 };
 </script>

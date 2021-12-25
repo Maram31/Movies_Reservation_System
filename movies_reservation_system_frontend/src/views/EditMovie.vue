@@ -18,7 +18,24 @@
         
         
         <v-form ref="form">
-        
+        <v-alert
+              v-show="this.success"
+              border="left"
+              color="#319177"
+              dark
+              type="success"
+            >
+            Movie is updated successfully
+            </v-alert>
+        <v-alert
+              v-show="this.fail"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            {{errorMsg}}
+            </v-alert> 
         
 
         <v-text-field
@@ -52,16 +69,29 @@
               type="time"
               :rules="[rules.required]"
             ></v-text-field>
-    <v-text-field
+            <v-row>
+            <v-file-input
               v-model="posterImage"
+              :disabled="!this.updatePoster"
+              prepend-icon="mdi-camera-plus"
               label="Poster Image"
               color="#4A646C"
               outlined
-              type="file"
+              chips
               accept="image/*"
               :rules="[rules.required]"
-            ></v-text-field>
-      <v-select
+            ></v-file-input>
+            <v-btn
+              @click="edit()"
+              class="ma-2"
+              icon
+              color="#4A646C"
+            >
+            <v-icon>{{ icons.mdiPencil }}</v-icon>
+            
+            </v-btn>
+          </v-row>
+            <v-select
               v-model="room"
               :items="items"
               label="Room"
@@ -73,7 +103,7 @@
         </v-form>
         <br/>
         
-            <v-btn @click="createNewMovie()" rounded dark color="#4A646C" x-large style="width: 250px">
+            <v-btn @click="EditMovie()" rounded dark color="#4A646C" x-large style="width: 250px">
               Update
             </v-btn>
           
@@ -86,7 +116,10 @@
 </template>
 
 <script>
-//import axios from 'axios';
+import {
+    mdiPencil,
+  } from '@mdi/js'
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -96,7 +129,19 @@ export default {
   },
   data() {
     return {
+      icons:{mdiPencil},
       movieId:this.$route.params.id,
+      title:'',
+      date:'',
+      startTime:'',
+      endTime:'',
+      room:'',
+      screen:'',
+      success:false,
+      posterImage:'',
+      fail:false,
+      updatePoster:false,
+      errorMsg:'',
       items: ['Room 1 - size 20', 'Room 2 - size 30'],
       rules: {
         required: (value) => !!value || 'Required.',
@@ -105,42 +150,84 @@ export default {
     };
   },
   methods: {
-    createNewMovie() {
+    edit(){
+      this.updatePoster=!this.updatePoster;
+      if(this.updatePoster==true){
+        this.posterImage=null;
+      }
+      
+    },
+    EditMovie() {
+      this.success=false;
+      this.fail=false;
       if (this.$refs.form.validate()) {
-        /*axios.post('http://127.0.0.1:8000/api/login', { name: this.Name, password: this.password }, { headers: { APP_KEY: 'c2Nob29sX2ZpbmRlcl9hcHBfa2V5ZmJkamhqeGNoa2N2anhqY2p2Ymh4amM6dmFzZGhoYXNkaGphZHNrZHNmYW1jbmhkc3VoZHVoY3Nq' } })
-          .then((response) => {
-            this.verifyalert = false;
-            this.NotRegisteredalert = false;
-            this.WrongNameOrPassAlert = false;
-            this.$store.state.usertoken = response.data.access_token;
-            localStorage.setItem('usertoken', response.data.access_token);
-            this.$router.push('/');
+        if(this.room=='Room 1 - size 20'){
+          this.screen=1
+        }
+        else{
+          this.screen=2
+        }
+        const fd = new FormData();
+
+        if(this.updatePoster==true){
+          fd.append('poster', this.posterImage);
+        }
+        else{
+          fd.append('poster', null);
+        }
+        fd.append('date', this.date);
+        fd.append('start_time', this.startTime);
+        fd.append('end_time', this.endTime);
+        fd.append('screen',  this.screen);
+        fd.append('title', this.title);
+        const option = { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
+        axios.post(`http://127.0.0.1:8000/editmovie/${this.$route.params.id}`, fd, option)
+          .then(() => {
+            this.success=true;
           })
           .catch((error) => {
-            if (error.response) {
-              if (error.response.status === 401) {
-                this.verifyalert = true;
-                this.NotRegisteredalert = false;
-                this.WrongNameOrPassAlert = false;
-              } else if (error.response.status === 402) {
-                this.verifyalert = false;
-                this.NotRegisteredalert = false;
-                this.WrongNameOrPassAlert = true;
-              } else {
-                this.verifyalert = false;
-                this.NotRegisteredalert = true;
-                this.WrongNameOrPassAlert = false;
-              }
-            }
-          });*/
+            this.fail=true;
+            this.errorMsg=error.response.data.ErrorsIn;
+            console.log(error.response.data.ErrorsIn)
+          });
       }
     },
     
   },
-  /*created() {
-    if (localStorage.getItem('usertoken') !== null) this.$router.push('/home');
-    //get movie details by id
-  },*/
+  created() {
+    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/movie/${this.$route.params.id}/edit`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    .then(response => {
+      const image=response.data.poster;
+      const urlToObject= async()=> {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const file = new File([blob], 'poster.jpg', {type: blob.type}); 
+        return file
+
+      }
+      urlToObject().then(x => { 
+        this.posterImage=x;
+        this.title=response.data.title;
+        this.date=response.data.date;
+        this.startTime=response.data.start_time;
+        this.startTime = this.startTime.slice(0, -3);
+        this.endTime=response.data.end_time;
+        this.endTime = this.endTime.slice(0, -3);
+        if(response.data.screen==1){
+          this.room=this.items[0];
+        }
+        else{
+          this.room=this.items[1];
+        }
+      
+      } )
+      
+      
+    }).catch((error) => {
+      console.log(error)
+    });
+  },
 };
 </script>
 <style scoped>

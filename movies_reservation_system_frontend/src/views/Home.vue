@@ -18,7 +18,15 @@
 
     <v-img
       height="150"
-      v-bind:src="movie.PosterImage"
+      v-if="movie.poster.includes('http')"
+      v-bind:src="movie.poster"
+      
+    ></v-img>
+    <v-img
+      height="150"
+      v-else-if="!movie.poster.includes('http')"
+      v-bind:src="`http://127.0.0.1:8000${movie.poster}`"
+      
       
     ></v-img>
 
@@ -36,7 +44,7 @@
         
         
       >
-        <v-chip style="font-size:0.8rem">{{movie.date}}: {{movie.StartTime}} to {{movie.EndTime}}</v-chip>
+        <v-chip style="font-size:0.8rem">{{movie.date}}:   From {{movie.start_time}} to {{movie.end_time}}</v-chip>
 
         
 
@@ -89,8 +97,7 @@
 </template>
 
 <script>
-
-
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -101,57 +108,8 @@ export default {
   data() {
     return{
     loading:false,
-    movies:
-      {
-      movie1:{
-        id:1,
-        title:"Spiderman",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie2:{
-        id:2,
-        title:"Free guy",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie3:{
-        id:3,
-        title:"Elbadla",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie4:{
-        id:4,
-        title:"Final Destination",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie5:{
-        id:5,
-        title:"Silence",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      
-    
-    },
-    manager:false,
+    movies:{},
+    manager:true,
     
   }
   
@@ -174,7 +132,20 @@ methods:{
     create(){
       this.$router.push('/create_new_movie');
     }
+    
   },
+  created(){
+    axios.get("http://127.0.0.1:8000/getAllMovies", {})
+    .then(response => {
+      this.movies=response.data;
+
+    }).catch((error) => {
+      console.log(error)
+    });
+    if(localStorage.getItem('userRole') == 'Manager'){
+      this.manager=true;
+    }
+  }
 }
 </script>
 <style scoped>
