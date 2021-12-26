@@ -44,6 +44,7 @@
               color="#4A646C"
               :rules="[rules.required]"
               outlined
+              clearable
             ></v-text-field>
 <v-text-field
               v-model="date"
@@ -52,14 +53,17 @@
               outlined
               type="date"
               :rules="[rules.required]"
+              clearable
             ></v-text-field>
             <v-text-field
+              
               v-model="startTime"
               label="Start Time"
               color="#4A646C"
               outlined
               type="time"
               :rules="[rules.required]"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="endTime"
@@ -68,6 +72,7 @@
               outlined
               type="time"
               :rules="[rules.required]"
+              clearable
             ></v-text-field>
     <v-file-input
               v-model="posterImage"
@@ -118,7 +123,7 @@ export default {
       date:'',
       startTime:'',
       endTime:'',
-      posterImage:'',
+      posterImage:'Enter Movie Poster',
       room:'',
       screen:'',
       success:false,
@@ -147,7 +152,6 @@ export default {
         fd.append('date', this.date);
         fd.append('start_time', this.startTime);
         fd.append('end_time', this.endTime);
-        console.log(this.posterImage)
         fd.append('screen',  this.screen);
         fd.append('title', this.title);
         const option = { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };

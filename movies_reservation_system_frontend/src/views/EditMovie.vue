@@ -44,6 +44,7 @@
               color="#4A646C"
               :rules="[rules.required]"
               outlined
+              clearable
             ></v-text-field>
 <v-text-field
               v-model="date"
@@ -52,6 +53,7 @@
               outlined
               type="date"
               :rules="[rules.required]"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="startTime"
@@ -60,6 +62,7 @@
               outlined
               type="time"
               :rules="[rules.required]"
+              clearable
             ></v-text-field>
             <v-text-field
               v-model="endTime"
@@ -68,6 +71,7 @@
               outlined
               type="time"
               :rules="[rules.required]"
+              clearable
             ></v-text-field>
             <v-row>
             <v-file-input
@@ -130,7 +134,6 @@ export default {
   data() {
     return {
       icons:{mdiPencil},
-      movieId:this.$route.params.id,
       title:'',
       date:'',
       startTime:'',
@@ -181,7 +184,7 @@ export default {
         fd.append('screen',  this.screen);
         fd.append('title', this.title);
         const option = { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
-        axios.post(`http://127.0.0.1:8000/editmovie/${this.$route.params.id}`, fd, option)
+        axios.post(`http://127.0.0.1:8000/editmovie/${localStorage.getItem('movieId')}`, fd, option)
           .then(() => {
             this.success=true;
           })
@@ -196,7 +199,7 @@ export default {
   },
   created() {
     if (localStorage.getItem('usertoken') == null) this.$router.push('/');
-    axios.get(`http://127.0.0.1:8000/movie/${this.$route.params.id}/edit`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    axios.get(`http://127.0.0.1:8000/movie/${localStorage.getItem('movieId')}/edit`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
     .then(response => {
       const image=response.data.poster;
       const urlToObject= async()=> {

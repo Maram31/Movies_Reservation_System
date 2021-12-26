@@ -106,6 +106,7 @@ export default {
     successMsg:'',
     requests:[],
     NoRequests:false,
+    loading:true,
     
   }
   
@@ -124,7 +125,7 @@ methods:{
         this.success=false;
         this.fail=true;
         this.errorMsg=error.response.data.message;
-        console.log(error)
+        console.log(error.response.data.message)
       });
     },
     AcceptRequest(id){
@@ -139,7 +140,7 @@ methods:{
         this.success=false;
         this.fail=true;
         this.errorMsg=error.response.data.message;
-        console.log(error)
+        console.log(error.response.data.message)
       });
 
     },
@@ -148,7 +149,8 @@ methods:{
   if (localStorage.getItem('usertoken') == null) this.$router.push('/');
     axios.get(`http://127.0.0.1:8000/requests`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
     .then(response => {
-      console.log(response.data);
+      
+      this.loading=false;
       this.requests=response.data;
       if (this.requests.length==0){
         this.NoRequests=true;

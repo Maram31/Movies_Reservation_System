@@ -17,11 +17,14 @@
     shaped
     color="#4A646C"
     >
+    
+  
 <v-card-title elevation="24" style="justify-content:center;font-size:2rem">Screen</v-card-title>
   </v-card>
   </v-row>
     <br/><br/>
     <v-row>
+      
     <v-card
     
     v-for="(seat, index) in seats"
@@ -34,43 +37,111 @@
     shaped
     style="margin:50px 20px 50px 120px"
     >
-
-    <v-card-title style="font-size:0.8rem">Seat at ({{seat.i}},{{seat.j}})</v-card-title>
+    
+    <v-card-title style="font-size:0.8rem">Seat at ({{seat.row_number}},{{seat.column_number}})</v-card-title>
     <v-divider class="mx-4"></v-divider>
-
+      
 
     <v-card-actions >
       <v-btn
         color="#319177"
         small
-
-        :disabled="!seat.reserved"
-        dark
-        @click="select(seat.i,seat.j)"
+        v-if="seatsAvailable[seat.row_number][seat.column_number]"
+        @click="select(seat.row_number,seat.column_number,seat.id)"
     
       >
-      {{label[seat.i][seat.j]}}
+      {{label[seat.row_number][seat.column_number]}}
       </v-btn>
-      
+      <div>
+      <v-btn
+        v-if="!seatsAvailable[seat.row_number][seat.column_number]"
+        color="#9C2542"
+        small
+        :disabled="!seatsAvailable[seat.row_number][seat.column_number]"
+      >
+      Taken
+      </v-btn>
+      </div>
       
     </v-card-actions>
+    <v-divider  style="margin:-100px 0px 0px 180px" vertical></v-divider>
+    
+    <v-divider style="margin:30px 0px 0px 0px"></v-divider>
+    <v-spacer></v-spacer>
     
   </v-card>
+  
   </v-row>
-    <div >
+    
+      <br/>
+      <br/><br/><br/>
+      
+      <v-form ref="form" style="width:50%;margin:0 350px 0 350px">
+      <v-text-field
+              :disabled="this.manager || this.siteAdmin ||(!this.manager && !this.siteAdmin && !this.customer)"
+              v-model="creditCard"
+              label="Credit Card Number"
+              color="#4A646C"
+              :rules="[rules.required,rules.number]"
+              outlined
+              clearable
+              counter
+              maxlength="16"
+            ></v-text-field>
+      <v-text-field
+              :disabled="this.manager || this.siteAdmin ||(!this.manager && !this.siteAdmin && !this.customer)"
+              v-model="pin"
+              label="Pin"
+              color="#4A646C"
+              outlined
+              maxlength="4"
+              counter
+              :rules="[rules.required,rules.pinNumber]"
+              clearable
+            ></v-text-field>  
+           
      <v-btn
-        :disabled="this.manager || this.siteAdmin"
+        :disabled="this.manager || this.siteAdmin ||(!this.manager && !this.siteAdmin && !this.customer)"
         color="#4A646C"
         x-large
-        dark
+        
         max-width="100px"
         @click="reserve()"
     
       >
         Reserve
       </v-btn>
+      <br/><br/>
+      <v-alert
+              v-show="this.success"
+              border="left"
+              color="#319177"
+              dark
+              type="success"
+            >
+            Seat(s) are reserved successfully
+            </v-alert>
+       <v-alert
+             v-show="this.fail"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            {{errorMsg}}
+            </v-alert> 
+        <v-alert
+             v-show="this.noSeatsAreSelected"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            No seat is selected
+            </v-alert>         
+       </v-form>
       
-      </div>
+     
       <v-dialog
       v-model="dialog"
       max-width="400"
@@ -113,6 +184,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -123,76 +195,102 @@ export default {
   
   data () {
     return{
+
     dialog:false,  
     customer:false,
     manager:false,
     siteAdmin:false, 
-    label:[[],[],[],[],[],[]],
-    roomSize:6,
-  seats:
-      {
-      seat1:{
-        id:1,
-        i:1,
-        j:1,
-        reserved:false,
-      }  ,
-      seat2:{
-        id:2,
-        i:1,
-        j:2,
-        reserved:true,
-      }  ,
-      seat3:{
-        id:3,
-        i:1,
-        j:3,
-        reserved:true,
-      }  ,
-      seat4:{
-        id:4,
-        i:1,
-        j:4,
-        reserved:false,
-      }  ,
-      seat5:{
-        id:5,
-        i:1,
-        j:5,
-        reserved:true,
-      }  ,
-      seat6:{
-        id:6,
-        i:2,
-        j:1,
-        reserved:true,
-      }  ,
-    },
-    roomId:this.$route.params.id, 
+    success:false,
+    fail:false,
+    errorMsg:'',
+    creditCard:'',
+    pin:'',
+    seatsAvailable:[[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1],[1,1,1,1,1,1]],
+    label:[["select","select","select","select","select","select"],["select","select","select","select","select","select"],["select","select","select","select","select","select"],["select","select","select","select","select","select"],["select","select","select","select","select","select"],["select","select","select","select","select","select"],["select","select","select","select","select","select"]],
+    roomSize:7,
+    seats:[],
     selectedSeats:[],
+    noSeatsAreSelected:false,
+    rules: {
+        required: (value) => !!value || 'Required.',
+        number: (value) => this.IsaNumber(value) || 'Not a Valid Number',
+        pinNumber: (value) => this.IsaPinNumber(value) || 'Not a Valid Number',
+      },
   }},
   
   
   methods: {
+    IsaNumber(value) {
+      const num = /^\d{16}$/;
+      if (value.match(num)) {
+        return true;
+      }
+      return false;
+    },
+    IsaPinNumber(value) {
+      const num = /^\d{4}$/;
+      if (value.match(num)) {
+        return true;
+      }
+      return false;
+    },
     reserve(){
-        if(localStorage.getItem('usertoken') != null){
-        //reserve
+        if (this.$refs.form.validate()) {
+          if(localStorage.getItem('usertoken') != null){
+           if(this.selectedSeats.length!=0){
+             this.noSeatsAreSelected=false
+              axios.post(`http://127.0.0.1:8000/movie/${localStorage.getItem('movieId')}/book`,{
+                seats:this.selectedSeats
+              }, 
+              { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } })
+              .then(()=>{
+                
+                this.success=true
+                this.fail=false
+                this.selectedSeats.forEach(selectedSeat => {
+                  
+                  this.seats.forEach(Seat=>{
+                    
+                    if (selectedSeat==Seat.id){
+                      this.seatsAvailable[Seat.row_number].splice(Seat.column_number, 1, 0);
+                    }
+                  })
+                });
+                
+
+              }).catch((error)=>{
+                this.success=false
+                this.fail=true
+                this.errorMsg=error.response.data.message
+              });
+            }
+            else{
+              this.noSeatsAreSelected=true
+            }
+          }
         }
     },
-    select(i,j){
+    select(i,j,seatID){
         if(localStorage.getItem('usertoken') == null){
           this.dialog=true;
         }
         else{
         if(localStorage.getItem('userRole') == 'Customer'){
 
+        if(this.label[i][j]=="select"){
+          //push in array of selected seat
+          this.label[i].splice(j, 1, "selected");
+          this.selectedSeats.push(seatID)
+          
+        }
+        else{
+          //pop from array the selected seat
+          this.label[i].splice(j, 1, "select");
+          this.selectedSeats = this.selectedSeats.filter(function(selectedSeat) {
+          return selectedSeat != seatID})
+          
+        }
         
-        //on select if it is a guest they should be asked 
-        //if they want to be directed to SignIn if they want to reserve a seat or stay in the same page
-        this.label[i][j]="selected";
-        console.log(i,j);
-        console.log(this.label);
-        //add selected seat i,j in the selected array
         }}
     },
     GoToSignIn(){
@@ -223,17 +321,19 @@ export default {
         this.siteAdmin= false;
         this.manager=false;
       }
-      for(let i=0;i<=this.roomSize;i++){
-        for(let j=0;j<=5;j++){
-         this.label[i][j]="select"
-        } 
-      } 
+      
+      axios.get(`http://127.0.0.1:8000/movie/${localStorage.getItem('movieId')}/seats`, { })
+      .then((response)=>{
+        this.seats=response.data;
+        this.seats.forEach(seat => {
+          this.seatsAvailable[seat.row_number][seat.column_number]=seat.available
+        });
+      }).catch((error)=>{
+        console.log(error)
+      });
+      
   },
-  watch: {
-      label(){
-
-      }
-  },
+  
   
 };
 </script>

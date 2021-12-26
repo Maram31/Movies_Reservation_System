@@ -8,6 +8,7 @@ export default new Vuex.Store({
   state: {
     usertoken: '',
     userRole:'',
+    movieId:'',
   },
   mutations: {
   },

@@ -1,7 +1,34 @@
 <template>
   <v-app id="home">
     <Header/>
-    
+    <br/>
+    <v-alert
+              v-show="this.NoReservations"
+              border="left"
+              color="#319177"
+              dark
+              type="info"
+            >
+            No reservations available
+    </v-alert> 
+    <v-alert
+              v-show="this.success"
+              border="left"
+              color="#319177"
+              dark
+              type="success"
+            >
+            Reservation is canceled successfully
+            </v-alert>
+        <v-alert
+              v-show="this.fail"
+              border="left"
+              color="#9C2542"
+              dark
+              type="error"
+            >
+            {{errorMsg}}
+            </v-alert> 
     <v-row>
     <v-card
     :loading="loading"
@@ -18,14 +45,14 @@
 
     
 
-    <v-card-title style="color:#4A646C">{{reservation.title}}</v-card-title>
+    <v-card-title style="color:#4A646C">{{reservation.movieTitle}}</v-card-title>
 
 
     <v-divider class="mx-4"></v-divider>
 
-    <v-card-title style="font-size:1rem">Room Number: {{reservation.id}}</v-card-title>
-    <v-card-title style="font-size:1rem">seats: </v-card-title>
-
+    <v-card-title style="font-size:1rem">Room Number: {{reservation.room}}</v-card-title>
+    <v-card-title style="font-size:1rem">Reserved seats: {{reservation.seats}}</v-card-title>
+    <v-card-title style="font-size:1rem">Reserved on: {{reservation.creation_date}}</v-card-title>
 
     <v-card-actions >
       <v-btn
@@ -49,7 +76,7 @@
 
 <script>
 
-
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 export default {
@@ -59,67 +86,51 @@ export default {
   },
   data() {
     return{
-    
-    reservations:
-      {
-      movie1:{
-        id:1,
-        title:"Spiderman",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie2:{
-        id:2,
-        title:"Free guy",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"5:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie3:{
-        id:3,
-        title:"Elbadla",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie4:{
-        id:4,
-        title:"Final Destination",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      movie5:{
-        id:5,
-        title:"Silence",
-        date:"Sunday",
-        StartTime:"3:00 pm",
-        EndTime:"3:00 pm",
-        room:"",
-        PosterImage:"https://cdn.vuetifyjs.com/images/cards/cooking.png",
-      }  ,
-      
-    
-    },
-    
+    errorMsg:'',
+    success:false,
+    fail:false,  
+    loading:true,
+    reservations:[],
+    NoReservations:false,
     
   }
   
 },
 methods:{
     CancelReservation(id){
-      console.log(id)
+      
+      axios.delete(`http://127.0.0.1:8000/bookings/${id}`,{ headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    .then(() => {
+      
+      this.success=true;
+      this.fail=false;
+      this.reservations = this.reservations.filter(function(reservation) {
+        return reservation.id != id
+      });
+      
+    }).catch((error) => {
+      console.log(error)
+      this.errorMsg=error.response.data.message;
+      this.success=false;
+      this.fail=true;
+    });
     }
   },
+  created(){
+    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/bookings`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    .then(response => {
+      
+      this.loading=false;
+      this.reservations=response.data;
+      if (this.reservations.length==0){
+        this.NoReservations=true;
+      }
+    }).catch((error) => {
+      console.log(error)
+    });
+    
+  }
 }
 </script>
 <style scoped>

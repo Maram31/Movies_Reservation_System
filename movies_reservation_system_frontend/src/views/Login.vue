@@ -49,6 +49,7 @@
               color="#4A646C"
               :rules="[rules.required]"
               outlined
+              clearable
             ></v-text-field>
           
 
@@ -61,6 +62,7 @@
               color="#4A646C"
               :rules="[rules.required, rules.Passlength,rules.containANumber,rules.containALetter]"
               outlined
+              clearable
               @click:append="show1 = !show1"
             ></v-text-field>
           
@@ -156,6 +158,7 @@ export default {
             this.WrongNameOrPassAlert = false;
             localStorage.setItem('usertoken', response.data.AccessToken);
             localStorage.setItem('userRole', response.data.role);
+            
             this.$router.push('/');
           })
           .catch((error) => {

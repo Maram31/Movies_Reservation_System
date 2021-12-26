@@ -84,6 +84,7 @@ export default {
     return{
     success:false,
     fail:false,
+    loading:true,
     errorMsg:'',
     users:[],
     
@@ -102,7 +103,7 @@ methods:{
       })
       
     }).catch((error) => {
-      console.log(error.message)
+      console.log(error.response.data.message)
       this.errorMsg=error.response.data.message;
       this.success=false;
       this.fail=true;
@@ -114,6 +115,7 @@ methods:{
     if (localStorage.getItem('usertoken') == null) this.$router.push('/');
     axios.get(`http://127.0.0.1:8000/users`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
     .then(response => {
+      this.loading=false;
       this.users=response.data;
     }).catch((error) => {
       console.log(error)

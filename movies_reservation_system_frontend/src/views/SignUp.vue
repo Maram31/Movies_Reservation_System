@@ -33,6 +33,7 @@
               color="#4A646C"
               :rules="[rules.required, rules.Namelength]"
               outlined
+              clearable
             ></v-text-field>
          
         
@@ -43,6 +44,7 @@
               color="#4A646C"
               :rules="[rules.required, rules.Namelength]"
               outlined
+              clearable
             ></v-text-field>
         
             <v-text-field
@@ -52,6 +54,7 @@
               color="#4A646C"
               :rules="[rules.required, rules.Namelength]"
               outlined
+              clearable
             ></v-text-field>
           
         
@@ -62,6 +65,7 @@
               color="#4A646C"
               :rules="[rules.required, rules.email]"
               outlined
+              clearable
             ></v-text-field>
           
 
@@ -76,6 +80,7 @@
               :rules="[rules.required, rules.Passlength,rules.containANumber,rules.containALetter]"
               outlined
               @click:append="show1 = !show1"
+              clearable
             ></v-text-field>
         
             <v-text-field
@@ -88,6 +93,7 @@
               :rules="[rules.required, rules.Matchingchar(Confirmpassword, password),rules.containANumber,rules.containALetter]"
               outlined
               @click:append="show2 = !show2"
+              clearable
             ></v-text-field>
 
 

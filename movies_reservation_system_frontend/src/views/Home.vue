@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return{
-    loading:false,
+    loading:true,
     movies:[],
     manager:false,
     NoMovies:false,
@@ -127,13 +127,14 @@ export default {
 },
 methods:{
     reserve(i){
-      
+      localStorage.setItem('movieId', i);
       this.$router.push({
         name: "Room",
         params: { id: i },
       });
     },
     Edit(i){
+      localStorage.setItem('movieId', i);
       this.$router.push({
         name: "EditMovie",
         params: { id: i },
@@ -151,7 +152,9 @@ methods:{
       this.movies=response.data;
       if (this.movies.length==0){
         this.NoMovies=true;
+        
       }
+      this.loading=false;
 
     }).catch((error) => {
       console.log(error)
@@ -159,7 +162,7 @@ methods:{
     if(localStorage.getItem('userRole') == 'Manager'){
       this.manager=true;
     }
-    console.log()
+    
     
   }
 }
