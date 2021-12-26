@@ -156,8 +156,8 @@ export default {
           .then((response) => {
             this.NotRegisteredalert = false;
             this.WrongNameOrPassAlert = false;
-            localStorage.setItem('usertoken', response.data.AccessToken);
-            localStorage.setItem('userRole', response.data.role);
+            sessionStorage.setItem('usertoken', response.data.AccessToken);
+            sessionStorage.setItem('userRole', response.data.role);
             
             this.$router.push('/');
           })
@@ -179,7 +179,7 @@ export default {
     
   },
   created() {
-    if (localStorage.getItem('usertoken') != null) this.$router.push('/');
+    if (sessionStorage.getItem('usertoken') != null) this.$router.push('/');
   },
 };
 </script>

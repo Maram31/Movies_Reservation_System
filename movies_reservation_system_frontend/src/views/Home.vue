@@ -127,14 +127,14 @@ export default {
 },
 methods:{
     reserve(i){
-      localStorage.setItem('movieId', i);
+      sessionStorage.setItem('movieId', i);
       this.$router.push({
         name: "Room",
         params: { id: i },
       });
     },
     Edit(i){
-      localStorage.setItem('movieId', i);
+      sessionStorage.setItem('movieId', i);
       this.$router.push({
         name: "EditMovie",
         params: { id: i },
@@ -159,7 +159,7 @@ methods:{
     }).catch((error) => {
       console.log(error)
     });
-    if(localStorage.getItem('userRole') == 'Manager'){
+    if(sessionStorage.getItem('userRole') == 'Manager'){
       this.manager=true;
     }
     

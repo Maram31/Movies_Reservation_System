@@ -99,7 +99,7 @@ export default {
 methods:{
     CancelReservation(id){
       
-      axios.delete(`http://127.0.0.1:8000/bookings/${id}`,{ headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+      axios.delete(`http://127.0.0.1:8000/bookings/${id}`,{ headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
     .then(() => {
       
       this.success=true;
@@ -117,8 +117,8 @@ methods:{
     }
   },
   created(){
-    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
-    axios.get(`http://127.0.0.1:8000/bookings`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    if (sessionStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/bookings`, { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
     .then(response => {
       
       this.loading=false;

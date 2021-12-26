@@ -154,7 +154,7 @@ export default {
         fd.append('end_time', this.endTime);
         fd.append('screen',  this.screen);
         fd.append('title', this.title);
-        const option = { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
+        const option = { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
         axios.post('http://127.0.0.1:8000/createmovie', fd, option)
           .then(() => {
             this.success=true;
@@ -170,7 +170,7 @@ export default {
     
   },
   created() {
-    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
+    if (sessionStorage.getItem('usertoken') == null) this.$router.push('/');
   },
 };
 </script>

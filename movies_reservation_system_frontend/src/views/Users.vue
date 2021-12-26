@@ -94,7 +94,7 @@ export default {
 },
 methods:{
     removeUser(id){
-      axios.delete(`http://127.0.0.1:8000/deleteUser/${id}`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+      axios.delete(`http://127.0.0.1:8000/deleteUser/${id}`, { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
     .then(() => {
       this.success=true;
       this.fail=false;
@@ -112,8 +112,8 @@ methods:{
     
   },
   created(){
-    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
-    axios.get(`http://127.0.0.1:8000/users`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    if (sessionStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/users`, { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
     .then(response => {
       this.loading=false;
       this.users=response.data;

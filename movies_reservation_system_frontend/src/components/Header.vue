@@ -61,16 +61,16 @@ export default {
     Logout(){
       
       if(this.customer==true){
-        axios.post('http://127.0.0.1:8000/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+        axios.post('http://127.0.0.1:8000/logout','', { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}` } });
       }
       else if(this.manager==true){
-        axios.post('http://127.0.0.1:8000/manager/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+        axios.post('http://127.0.0.1:8000/manager/logout','', { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}` } });
       }  
       else if(this.siteAdmin==true){
-        axios.post('http://127.0.0.1:8000/admin/logout','', { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } });
+        axios.post('http://127.0.0.1:8000/admin/logout','', { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}` } });
       }
       
-      localStorage.clear();
+      sessionStorage.clear();
       this.authorized= false;
       this.customer=false;
       this.siteAdmin= false;
@@ -90,19 +90,19 @@ export default {
     
   },
   created(){
-    if (localStorage.getItem('usertoken') != null){
+    if (sessionStorage.getItem('usertoken') != null){
       this.authorized=true;
-      if(localStorage.getItem('userRole') == 'Customer'){
+      if(sessionStorage.getItem('userRole') == 'Customer'){
         this.customer=true;
         this.siteAdmin= false;
         this.manager=false;
       }
-      else if(localStorage.getItem('userRole') == 'Manager'){
+      else if(sessionStorage.getItem('userRole') == 'Manager'){
         this.customer=false;
         this.siteAdmin= false;
         this.manager=true;
       }
-      else if(localStorage.getItem('userRole') == 'Admin'){
+      else if(sessionStorage.getItem('userRole') == 'Admin'){
         this.customer=false;
         this.siteAdmin= true;
         this.manager=false;

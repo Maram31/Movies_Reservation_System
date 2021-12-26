@@ -236,13 +236,13 @@ export default {
     },
     reserve(){
         if (this.$refs.form.validate()) {
-          if(localStorage.getItem('usertoken') != null){
+          if(sessionStorage.getItem('usertoken') != null){
            if(this.selectedSeats.length!=0){
              this.noSeatsAreSelected=false
-              axios.post(`http://127.0.0.1:8000/movie/${localStorage.getItem('movieId')}/book`,{
+              axios.post(`http://127.0.0.1:8000/movie/${sessionStorage.getItem('movieId')}/book`,{
                 seats:this.selectedSeats
               }, 
-              { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}` } })
+              { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}` } })
               .then(()=>{
                 
                 this.success=true
@@ -271,11 +271,11 @@ export default {
         }
     },
     select(i,j,seatID){
-        if(localStorage.getItem('usertoken') == null){
+        if(sessionStorage.getItem('usertoken') == null){
           this.dialog=true;
         }
         else{
-        if(localStorage.getItem('userRole') == 'Customer'){
+        if(sessionStorage.getItem('userRole') == 'Customer'){
 
         if(this.label[i][j]=="select"){
           //push in array of selected seat
@@ -301,17 +301,17 @@ export default {
   },
   created(){
      
-     if(localStorage.getItem('userRole') == 'Customer'){
+     if(sessionStorage.getItem('userRole') == 'Customer'){
         this.customer=true;
         this.siteAdmin= false;
         this.manager=false;
       }
-      else if(localStorage.getItem('userRole') == 'Manager'){
+      else if(sessionStorage.getItem('userRole') == 'Manager'){
         this.customer=false;
         this.siteAdmin= false;
         this.manager=true;
       }
-      else if(localStorage.getItem('userRole') == 'Admin'){
+      else if(sessionStorage.getItem('userRole') == 'Admin'){
         this.customer=false;
         this.siteAdmin= true;
         this.manager=false;
@@ -322,7 +322,7 @@ export default {
         this.manager=false;
       }
       
-      axios.get(`http://127.0.0.1:8000/movie/${localStorage.getItem('movieId')}/seats`, { })
+      axios.get(`http://127.0.0.1:8000/movie/${sessionStorage.getItem('movieId')}/seats`, { })
       .then((response)=>{
         this.seats=response.data;
         this.seats.forEach(seat => {

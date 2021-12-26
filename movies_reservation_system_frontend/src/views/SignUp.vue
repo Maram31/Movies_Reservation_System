@@ -233,8 +233,8 @@ export default {
         })
           .then((response) => {
             this.ExistingUseralert = false;
-            localStorage.setItem('usertoken', response.data.AccessToken);
-            localStorage.setItem('userRole', response.data.user);
+            sessionStorage.setItem('usertoken', response.data.AccessToken);
+            sessionStorage.setItem('userRole', response.data.user);
             this.$router.push('/');
           })
           .catch(() => {

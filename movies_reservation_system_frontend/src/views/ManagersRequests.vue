@@ -114,7 +114,7 @@ export default {
 methods:{
     CancelRequest(id){
 
-      axios.patch(`http://127.0.0.1:8000/user/${id}`,{approved:0} ,{ headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+      axios.patch(`http://127.0.0.1:8000/user/${id}`,{approved:0} ,{ headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
       .then(() => {
         this.requests = this.requests.filter(function(request) {
         return request.id != id})
@@ -129,7 +129,7 @@ methods:{
       });
     },
     AcceptRequest(id){
-      axios.patch(`http://127.0.0.1:8000/user/${id}`,{approved:1}, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+      axios.patch(`http://127.0.0.1:8000/user/${id}`,{approved:1}, { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
       .then(() => {
         this.requests = this.requests.filter(function(request) {
         return request.id != id})
@@ -146,8 +146,8 @@ methods:{
     },
   },
   created(){
-  if (localStorage.getItem('usertoken') == null) this.$router.push('/');
-    axios.get(`http://127.0.0.1:8000/requests`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+  if (sessionStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/requests`, { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
     .then(response => {
       
       this.loading=false;

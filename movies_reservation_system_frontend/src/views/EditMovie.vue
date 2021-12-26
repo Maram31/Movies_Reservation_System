@@ -183,8 +183,8 @@ export default {
         fd.append('end_time', this.endTime);
         fd.append('screen',  this.screen);
         fd.append('title', this.title);
-        const option = { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
-        axios.post(`http://127.0.0.1:8000/editmovie/${localStorage.getItem('movieId')}`, fd, option)
+        const option = { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`, 'Content-Type': 'multipart/form-data' } };
+        axios.post(`http://127.0.0.1:8000/editmovie/${sessionStorage.getItem('movieId')}`, fd, option)
           .then(() => {
             this.success=true;
           })
@@ -198,8 +198,8 @@ export default {
     
   },
   created() {
-    if (localStorage.getItem('usertoken') == null) this.$router.push('/');
-    axios.get(`http://127.0.0.1:8000/movie/${localStorage.getItem('movieId')}/edit`, { headers: { Authorization: `${'Bearer'} ${localStorage.getItem('usertoken')}`}})
+    if (sessionStorage.getItem('usertoken') == null) this.$router.push('/');
+    axios.get(`http://127.0.0.1:8000/movie/${sessionStorage.getItem('movieId')}/edit`, { headers: { Authorization: `${'Bearer'} ${sessionStorage.getItem('usertoken')}`}})
     .then(response => {
       const image=response.data.poster;
       const urlToObject= async()=> {
