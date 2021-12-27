@@ -35,12 +35,12 @@
     v-for="(reservation, index) in reservations"
     :key="index"
     
-    width="80%"
+    width="60%"
     max-height="450"
     elevation="24"
     outlined
     shaped
-    style="margin:100px 0px 50px 150px"
+    style="margin:100px 250px 50px 250px"
     >
 
     
@@ -50,11 +50,11 @@
 
     <v-divider class="mx-4"></v-divider>
 
-    <v-card-title style="font-size:1rem">Room Number: {{reservation.room}}</v-card-title>
-    <v-card-title style="font-size:1rem">Reserved seats: {{reservation.seats}}</v-card-title>
-    <v-card-title style="font-size:1rem">Reserved on: {{reservation.creation_date}}</v-card-title>
+    <v-card-title style="text-align:start;padding-top:20px;padding-left:20px;font-size:1rem"><strong>Room Number: </strong> {{reservation.room}}</v-card-title>
+    <v-card-title style="text-align:start;padding-left:20px;font-size:1rem"><strong>Reserved seats: </strong> {{reservation.seats}}</v-card-title>
+    <v-card-title style="text-align:start;padding-left:20px;font-size:1rem"><strong>Reserved on: </strong> {{reservation.creation_date}}</v-card-title>
 
-    <v-card-actions >
+    <v-card-actions style="display:flex;justify-content:flex-end;margin:0 7px 5px 0">
       <v-btn
         color="#9C2542"
         dark

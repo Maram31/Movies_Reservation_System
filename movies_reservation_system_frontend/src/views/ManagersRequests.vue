@@ -35,12 +35,12 @@
     v-for="(request, index) in requests"
     :key="index"
     
-    width="80%"
-    height="260"
+    width="500"
+    height="290"
     elevation="24"
     outlined
     shaped
-    style="margin:100px 0px 50px 150px"
+    style="margin:100px 50px 50px 80px"
     >
 
     
@@ -50,14 +50,14 @@
 
     <v-divider class="mx-4"></v-divider>
 
-    <p style="font-size:1rem">Manager Username: {{request.username}}</p>
-    <p style="font-size:1rem">Manager Firstname: {{request.first_name}}</p>
-    <p style="font-size:1rem">Manager Lastname: {{request.last_name}}</p>
-    <p style="font-size:1rem">Manager Email: {{request.email}}</p>
+    <p style="text-align:start;padding-top:20px;padding-left:20px;font-size:1rem"><strong>Username:</strong> {{request.username}}</p>
+    <p style="text-align:start;padding-left:20px;font-size:1rem"><strong>Firstname:</strong> {{request.first_name}}</p>
+    <p style="text-align:start;padding-left:20px;font-size:1rem"><strong>Lastname:</strong> {{request.last_name}}</p>
+    <p style="text-align:start;padding-left:20px;font-size:1rem"><strong>Email:</strong> {{request.email}}</p>
 
 
     <v-card-actions >
-      <v-row>
+      <v-row style="display:flex;justify-content:flex-end;">
       <v-btn
         color="#4A646C"
         dark
@@ -67,7 +67,7 @@
       >
         Accept
       </v-btn>
-      <v-spacer></v-spacer>
+      
       <v-btn
         color="#9C2542"
         dark

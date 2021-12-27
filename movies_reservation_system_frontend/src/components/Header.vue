@@ -1,9 +1,10 @@
 <template>
-  <nav>
+  <nav > 
     <v-app-bar
       src="../assets/image2.jpg"
       elevation="24"
       shaped
+      
     >
       
       <v-toolbar-title style="font-size: 2rem;color:white" >Movie Reservation System</v-toolbar-title>

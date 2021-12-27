@@ -26,12 +26,12 @@
     v-for="(user, index) in users"
     :key="index"
     
-    width="80%"
-    height="280"
+    width="500"
+    height="300"
     elevation="24"
     outlined
     shaped
-    style="margin:100px 0px 50px 150px"
+    style="margin:100px 50px 50px 80px"
     >
 
     
@@ -41,10 +41,10 @@
 
     <v-divider class="mx-4"></v-divider>
     
-    <p style="font-size:1rem">User Firstname: {{user.first_name}}</p>
-    <p style="font-size:1rem">User Lastname: {{user.last_name}}</p>
-    <p style="font-size:1rem">User Email: {{user.email}}</p>
-    <p style="font-size:1rem">User Role: {{user.role}}</p>
+    <p style="text-align:start;padding-top:20px;padding-left:20px;font-size:1rem"><strong>Firstname: </strong>{{user.first_name}}</p>
+    <p style="text-align:start;padding-left:20px;font-size:1rem"><strong>Lastname:</strong> {{user.last_name}}</p>
+    <p style="text-align:start;padding-left:20px;font-size:1rem"><strong>Email: </strong>{{user.email}}</p>
+    <p style="text-align:start;padding-left:20px;font-size:1rem"><strong> Role: </strong>{{user.role}}</p>
 
     <v-card-actions >
       
