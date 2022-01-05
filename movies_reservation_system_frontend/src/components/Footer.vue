@@ -2,7 +2,7 @@
   <v-card height="48">
     <v-footer style="background-color:#07141c;">
     <v-col
-      class="text-center teal--text"
+      class="text-center"
       cols="12"
       style="color:white"
       
